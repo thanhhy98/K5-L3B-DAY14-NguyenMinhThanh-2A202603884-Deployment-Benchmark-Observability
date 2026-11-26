@@ -3,7 +3,7 @@ services:
     name: k5-day14-agent
     runtime: docker
     rootDir: 06-lab-complete
-    region: oregon
+    region: singapore
     plan: free
     healthCheckPath: /health
     envVars:
@@ -25,7 +25,7 @@ services:
 
   - type: keyvalue
     name: k5-day14-redis
-    region: oregon
+    region: singapore
     plan: free
     ipAllowList: []
     maxmemoryPolicy: noeviction
