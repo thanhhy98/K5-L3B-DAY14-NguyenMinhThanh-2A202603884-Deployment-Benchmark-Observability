@@ -116,20 +116,15 @@ python check_production_ready.py --public-url https://your-app.railway.app   # t
 
 ## Deploy
 
-**Railway**
+**Render (selected for CP6)**
 
-```bash
-npm i -g @railway/cli
-railway login
-railway init
-railway variables set AGENT_API_KEY=your-secret-key
-railway up
-railway domain        # nhận public URL
-```
+Push the repository to GitHub, then in Render choose **New → Blueprint**, connect the repository, and set the Blueprint file path to `06-lab-complete/render.yaml`. The Blueprint creates the Docker web service and a private Key Value instance in Oregon. It generates `AGENT_API_KEY` and wires `REDIS_URL` to Key Value.
 
-**Render:** push repo lên GitHub → Render Dashboard → New → Blueprint → chọn repo (Render đọc `render.yaml`) → điền secret → Deploy.
+The included free Key Value plan has no persistence. Choose a paid plan and enable persistence if Redis data must survive Redis restarts.
 
-Sau khi deploy: `python check_production_ready.py --public-url <URL>` và ghi URL vào `DEPLOYMENT.md` (xem [DAY14_DELIVERY_CHECKLIST.md](../DAY14_DELIVERY_CHECKLIST.md)).
+**Railway (alternative):** install the Railway CLI, run `railway login` and `railway init` from `06-lab-complete/`, set `AGENT_API_KEY` and `REDIS_URL` as service variables, then run `railway up`.
+
+After deployment, run `python check_production_ready.py --public-url <URL>` and record the URL in `DEPLOYMENT.md` (see [DAY14_DELIVERY_CHECKLIST.md](../DAY14_DELIVERY_CHECKLIST.md)).
 
 ---
 

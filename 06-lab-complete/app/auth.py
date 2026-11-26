@@ -6,10 +6,24 @@ Yêu cầu:
   • Key phải trùng biến môi trường AGENT_API_KEY
   • Thiếu hoặc sai key → HTTP 401 (không phải 403 hay 422)
 """
+import secrets
 
+from fastapi import HTTPException, Security
+from fastapi.security import APIKeyHeader
 
-def verify_api_key() -> str:
+from app.config import settings
+
+api_key_header = APIKeyHeader(name="X-API-Key", auto_error=False)
+
+def verify_api_key(api_key: str | None = Security(api_key_header)) -> str:
     """Dependency cho FastAPI — dùng trong /ask: Depends(verify_api_key)."""
-    # TODO: đọc header X-API-Key (gợi ý: fastapi.security.APIKeyHeader),
-    #       so sánh với settings.agent_api_key; thiếu/sai → raise HTTPException(status_code=401)
-    raise NotImplementedError("TODO: verify_api_key")
+    configured_key = settings.agent_api_key
+    if (
+        not api_key
+        or not configured_key
+        or not secrets.compare_digest(
+            api_key.encode("utf-8"), configured_key.encode("utf-8")
+        )
+    ):
+        raise HTTPException(status_code=401, detail="Invalid or missing API key")
+    return api_key
